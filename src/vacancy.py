@@ -1,38 +1,64 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
-class Vacancy(ABC):
+class Vacancy:
     """
-    Представляет абстрактный класс Vacancy.
+    Представляет класс Вакансия.
     """
+    name: str
+    url: str
+    salary: str
+    requirement: str
 
-    @abstractmethod
-    def __init__(self):
-        """
-        Абстрактный метод для инициализации класса Vacancy.
-        """
-        pass
+    def __init__(self, name: str, url: str, salary: str, requirement: str) -> None:
+        self.name = name
+        self.url = url
+        self.salary = salary if salary else "Зарплата не указана"
+        self.requirement = requirement
 
+    @classmethod
+    def new_vacancy(cls, name, url, salary, requirement):
+        return cls(name, url, salary, requirement)
 
-    @abstractmethod
-    def get_vacancies(self, keyword: str):
-        """
-        Абстрактный метод для получения вакансий по ключевому слову.
+    # Метод валидации данных
 
-        Args:
-            keyword (str): Ключевое слово для поиска вакансий.
-        """
+    def validate(self):
+        if not self.salary:
+            self.salary = "Зарплата не указана"
 
-        pass
+    # Метод сравнения вакансий по зарплате
+    def __lt__(self, other):
+        try:
+            self_salary = int(self.salary.split()[0].replace('руб', '').replace(' ', ''))
+            other_salary = int(other.salary.split()[0].replace('руб', '').replace(' ', ''))
+            return self_salary < other_salary
+        except ValueError:
+            return False
+        except AttributeError:
+            return False
 
-    @abstractmethod
-    def post_data(self, url_post: str):
-        """
-       Абстрактный метод для отправки запроса по эндпоинту.
+    def __eq__(self, other):
+        return self.salary == other.salary
 
-       Args:
-           url_post (str): URL запроса
-       """
+    def __gt__(self, other):
+        try:
+            self_salary = int(self.salary.split()[0].replace('руб', '').replace(' ', ''))
+            other_salary = int(other.salary.split()[0].replace('руб', '').replace(' ', ''))
+            return self_salary > other_salary
+        except ValueError:
+            return False
+        except AttributeError:
+            return False
 
-    pass
+    def __str__(self):
+        return f"Vacancy: {self.name} ({self.salary})"
 
+    def __repr__(self):
+        return f"Vacancy({self.name}, {self.salary})"
+
+# Пример использования
+# vacancy1 = Vacancy("Python Developer", "https://example.com", "80 000 руб.", "Experience with Python required")
+# vacancy2 = Vacancy("Data Scientist", "https://example.com", "100 000 руб.", "Experience with machine learning required")
+#
+# print(vacancy1 == vacancy2)  # Сравнение вакансий по зарплате
+# print(vacancy1)  # Вывод информации о вакансии

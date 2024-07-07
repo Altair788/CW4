@@ -13,15 +13,13 @@ class API(ABC):
     """
 
     @abstractmethod
-    def __init__(self, file_worker_path: Path):
+    def __init__(self) -> None:
         """
         Абстрактный метод для инициализации класса API.
-
         Args:
-            file_worker_path (Path): Путь к файлу для работы.
+            file_worker_path: Path - ссылка на файл с данными для работы.
         """
-
-        self.file_worker_path = file_worker_path
+        pass
 
     @abstractmethod
     def get_vacancies(self, keyword: str):
@@ -42,8 +40,7 @@ class API(ABC):
        Args:
            url_post (str): URL запроса
        """
-
-    pass
+        pass
 
 
 class Parser(API):
@@ -53,34 +50,50 @@ class Parser(API):
     Наследует функциональность от абстрактного класса API.
     """
 
-    def __init__(self, file_worker_path) -> None:
+    def __init__(self, file_worker_path: Path):
         """
+        Метод для инициализации класса API.
 
-        Конструктор объекта класса Parser.
-
-        Attributes:
-        file_worker_path (str): Путь к файлу для работы с настройками.
-        url (str): URL для обращения к API.
-        headers (dict): Заголовки для запросов.
-        params (dict): Параметры запросов.
-        vacancies (list): Список вакансий.
+        Args:
+            file_worker_path (Path): Путь к файлу для работы.
         """
-        super().__init__(file_worker_path)
+        self.file_worker_path = file_worker_path
 
-        with open(file_worker_path, 'r', encoding="UTF8") as file:
+        with open(self.file_worker_path, 'r', encoding="UTF8") as file:
             file_worker = json.load(file)
+            self.url: str = file_worker.get('url', 'https://api.hh.ru/vacancies')
+            self.headers: dict = file_worker.get('headers', {'User-Agent': 'HH-User-Agent'})
+            self.params: dict = file_worker.get('params', {'text': TEXT, 'page': PAGE, 'per_page': PER_PAGE})
+            self.vacancies: list = file_worker.get('vacancies', [])
 
-        self.url: str = file_worker.get('url', 'https://api.hh.ru/vacancies')
-        self.headers: dict = file_worker.get('headers', {'User-Agent': 'HH-User-Agent'})
-        self.params: dict = file_worker.get('params', {'text': TEXT, 'page': PAGE, 'per_page': PER_PAGE})
-        self.vacancies: list = file_worker.get('vacancies', [])
-
-    def get_vacancies(self, keyword: str) -> None:
+    def get_vacancies(self, keyword: str) -> list:
         """
         Метод ля получения вакансий в формате JSON.
         Args:
             keyword (str): Ключевое слово для поиска вакансий.
+        Returns:
+            self.vacancies(list(dict): Список с вакансиями
         """
+
+        pass
+
+    def post_data(self, url_post):
+        pass
+
+
+class HeadHunterAPI(Parser):
+    def __init__(self, file_worker_path) -> None:
+        super().__init__(file_worker_path)
+
+    def get_vacancies(self, keyword: str) -> list:
+        """
+        Метод ля получения вакансий в формате JSON.
+        Args:
+            keyword (str): Ключевое слово для поиска вакансий.
+        Returns:
+            self.vacancies(list(dict): Список с вакансиями
+        """
+
         self.params['text'] = keyword
         while self.params.get('page') != 20:
             try:
@@ -90,10 +103,4 @@ class Parser(API):
                 self.params['page'] += 1
             except requests.exceptions.RequestException as e:
                 print(f"Ошибка {e}")
-
-    def post_data(self, url_post):
-        pass
-
-
-class HeadHunterAPI(Parser):
-    pass
+        return self.vacancies

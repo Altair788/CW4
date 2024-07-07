@@ -1,5 +1,6 @@
 from config import FILE_WORKER_PATH
 from src.api import HeadHunterAPI
+from src.vacancy import Vacancy
 
 # Создание экземпляра класса для работы с API сайтов с вакансиями
 hh_api = HeadHunterAPI(FILE_WORKER_PATH)

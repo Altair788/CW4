@@ -12,7 +12,7 @@ class Vacancy:
 
     def __init__(self, name: str, url: str, salary: dict, requirement: str) -> None:
         self.name = name
-        self.url = url
+        self.url = url if url else ""
         # Если зарплата не указана, создаем пустой диапазон
         self.salary = salary if salary else {"from": 0, "to": 0}
         self.requirement = requirement
@@ -20,6 +20,18 @@ class Vacancy:
     @classmethod
     def new_vacancy(cls, name, url, salary, requirement):
         return cls(name, url, salary, requirement)
+
+    @classmethod
+    def cast_to_object_list(cls, data: list[dict[any:any]]):
+        objects_list = []
+        for item in data:
+            name = item.get('name')
+            url = item.get('url', "")
+            salary = item.get('salary', {"from": 0, "to": 0})
+            requirement = item.get('requirement')
+            vacancy = cls.new_vacancy(name, url, salary, requirement)
+            objects_list.append(vacancy)
+        return objects_list
 
     # Метод сравнения вакансий по зарплате
     def compare_salaries(self, other):
@@ -58,3 +70,5 @@ class Vacancy:
 #
 # print(vacancy1 == vacancy2)  # Сравнение вакансий по зарплате
 # print(vacancy1)  # Вывод информации о вакансии
+
+# vacancy = Vacancy("Python Developer", "", "100 000-150 000 руб.", "Требования: опыт работы от 3 лет...")

@@ -1,11 +1,25 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 class BaseVacancy(ABC):
+    """
+    Абстрактный базовый класс для представления вакансии.
+    """
 
     @classmethod
     @abstractmethod
-    def new_vacancy(cls, *args, **kwargs):
+    def new_vacancy(cls, *args: Any, **kwargs: Any) -> 'BaseVacancy':
+        """
+        Метод для создания нового объекта вакансии.
+
+        Args:
+            *args: Произвольные позиционные аргументы для создания вакансии.
+            **kwargs: Произвольные именованные аргументы для создания вакансии.
+
+        Returns:
+            BaseVacancy: Новый объект вакансии.
+        """
         pass
 
 
@@ -30,9 +44,6 @@ class Vacancy(BaseVacancy, PrintMixin):
     url: str
     salary: dict
     requirement: str
-
-    # Статическая переменная для хранения всех вакансий
-    vacancies = []
 
     def __init__(self, name: str, url: str, salary: dict, requirement: str) -> None:
         """
@@ -69,7 +80,7 @@ class Vacancy(BaseVacancy, PrintMixin):
     def requirement(self):
         return self.__requirement
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
        Выводит строковое представление объекта класса Вакансия.
         """
@@ -86,7 +97,7 @@ class Vacancy(BaseVacancy, PrintMixin):
                 f"Требования к вакансии: {self.requirement}")
 
     @classmethod
-    def new_vacancy(cls, vacancy):
+    def new_vacancy(cls, vacancy: dict):
         name, url, salary, requirement = vacancy.values()
         return cls(name, url, salary, requirement)
 
@@ -114,7 +125,7 @@ class Vacancy(BaseVacancy, PrintMixin):
         return self.compare_salaries(other) == 1
 
     @classmethod
-    def cast_to_object_list(cls, data):
+    def cast_to_object_list(cls, data: list[dict]) -> list['Vacancy']:
         """
         Возвращает список экземпляров класса Vacancy.
         """

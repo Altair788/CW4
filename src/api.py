@@ -64,13 +64,13 @@ class Parser(API):
             self.params: dict = settings.get('params', {'text': "", 'page': 0, 'per_page': 100})
             self.vacancies: list = settings.get('vacancies', [])
 
-    def get_vacancies(self, keyword: str) -> list:
+    def get_vacancies(self, keyword: str) -> list[dict]:
         """
-        Метод ля получения вакансий в формате JSON.
+        Метод для получения вакансий в формате JSON.
         Args:
             keyword (str): Ключевое слово для поиска вакансий.
         Returns:
-            self.vacancies(list(dict): Список с вакансиями
+            list[dict]: Список с вакансиями
         """
         try:
             self.params['text'] = keyword
@@ -82,10 +82,22 @@ class Parser(API):
             print(f"Ошибка при выполнении запроса: {e}")
             return []
 
-    def post_data(self, url_post):
+    def post_data(self, url_post: str) -> None:
+        """
+       Метод для отправки данных на сервер.
+       Args:
+           url_post (str): URL для отправки данных.
+       Returns:
+           None
+       """
         pass
 
 
 class HeadHunterAPI(Parser):
-    def __init__(self, settings_path) -> None:
+    def __init__(self, settings_path: Path) -> None:
+        """
+        Инициализирует объект HeadHunterAPI.
+        Args:
+            settings_path (Path): Путь к файлу с настройками.
+        """
         super().__init__(settings_path)

@@ -2,9 +2,6 @@ from pathlib import Path
 
 ROOT_PATH = Path(__file__).parent
 VACANCIES_JSON_PATH = ROOT_PATH.joinpath("data", "vacancies.json")
-FILE_WORKER_PATH = ROOT_PATH.joinpath("data", "file_worker")
+SETTINGS_PATH = ROOT_PATH.joinpath("data", "settings")
 
-
-TEXT = ''
-PAGE = 0
-PER_PAGE = 100
+RUB_TO_USD = 90

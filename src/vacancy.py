@@ -23,15 +23,22 @@ class Vacancy:
 
     @classmethod
     def cast_to_object_list(cls, data: list[dict[any:any]]):
-        objects_list = []
+        """
+        Возвращает список экземпляров класса Вакансия
+        :param data:
+        :return:
+        """
+        vacancies_list = []
         for item in data:
-            name = item.get('name')
-            url = item.get('url', "")
-            salary = item.get('salary', {"from": 0, "to": 0})
-            requirement = item.get('requirement')
-            vacancy = cls.new_vacancy(name, url, salary, requirement)
-            objects_list.append(vacancy)
-        return objects_list
+            vacancy = Vacancy(
+                name=item.get('name'),
+                url=item.get('url'),
+                salary=item.get('salary'),
+                requirement=item.get('requirement'),
+            )
+
+            vacancies_list.append(vacancy)
+        return vacancies_list
 
     # Метод сравнения вакансий по зарплате
     def compare_salaries(self, other):
@@ -61,6 +68,8 @@ class Vacancy:
 
     def __repr__(self):
         return f"Vacancy({self.name}, {self.salary}, {self.requirement}, {self.url})"
+
+
 
 # Пример использования
 # vacancy1 = Vacancy("Python Developer", "https://example.com", {'from': 80000, 'to': 120000},

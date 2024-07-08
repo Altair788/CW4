@@ -26,35 +26,37 @@ class AbstractFileManager(ABC):
 class JSONSaver(AbstractFileManager):
     def __init__(self, file_path):
         self.file_path = file_path
-        self.vacancies = []
+        self.vacancies = self.load_from_file()
 
-    @abstractmethod
     def add_vacancy(self, vacancy):
-        self.vacancies.append({
-            "name": vacancy.name,
-            "url": vacancy.url,
-            "salary": vacancy.salary,
-            "requirement": vacancy.requirement
-        })
-        self._save_to_file()
+        self.vacancies["name"] = vacancy.name,
+        self.vacancies["url"] = vacancy.url,
+        self.vacancies["salary"] = vacancy.salary,
+        self.vacancies["requirement"] = vacancy.requirement,
+        self.save_to_file()
 
-    def _save_to_file(self):
+    def save_to_file(self):
         with open(self.file_path, 'w', encoding="UTF8") as file:
             json.dump(self.vacancies, file, indent=4)
 
-    @abstractmethod
     def get_vacancies(self, key_words):
         result = [v for v in self.vacancies if key_words(v)]
         return result
 
-    @abstractmethod
     def delete_vacancies(self):
         self.vacancies = []
-        self._save_to_file()
+        self.save_to_file()
 
     def add_vacancy_to_db(self, vacancy):
         pass
-#
+
+    def load_from_file(self):
+        try:
+            with open(self.file_path, 'r', encoding="UTF8") as file:
+                return json.load(file)
+        except FileNotFoundError:
+            return []
+
 # # Пример использования класса JSONFileHandler с заглушкой add_vacancy_to_db
 # file_handler = JSONFile(VACANCIES_JSON_PATH)
 # vacancy1 = Vacancy("Python Developer", "https://example.com", {'from': 80000, 'to': 120000},

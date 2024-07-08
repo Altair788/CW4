@@ -60,7 +60,7 @@ class Parser(API):
         self.file_worker_path = file_worker_path
 
         with open(self.file_worker_path, 'r', encoding="UTF8") as file:
-            file_worker = json.load(file)
+            file_worker: dict = json.load(file)
             self.url: str = file_worker.get('url', 'https://api.hh.ru/vacancies')
             self.headers: dict = file_worker.get('headers', {'User-Agent': 'HH-User-Agent'})
             self.params: dict = file_worker.get('params', {'text': TEXT, 'page': PAGE, 'per_page': PER_PAGE})

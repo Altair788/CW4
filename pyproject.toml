@@ -10,7 +10,6 @@ python = "^3.12"
 pytest = "^8.2.2"
 pytest-cov = "^5.0.0"
 requests = "^2.32.3"
-forex-python = "^1.8"
 
 
 [tool.coverage.run]

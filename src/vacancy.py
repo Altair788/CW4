@@ -97,8 +97,24 @@ class Vacancy(BaseVacancy, PrintMixin):
                 f"Требования к вакансии: {self.requirement}")
 
     @classmethod
-    def new_vacancy(cls, vacancy: dict):
-        name, url, salary, requirement = vacancy.values()
+    def new_vacancy(cls, data: dict):
+        """
+        Метод для создания экземпляра класса Вакансия.
+        Args:
+            data(dict): данные по вакансии.
+        """
+        salary = data.get("salary")
+        if salary:
+            salary_from = salary.get('from', 0) if salary.get('from') is not None else 0
+            salary_to = salary.get('to', 0) if salary.get('to') is not None else 0
+        else:
+            # Устанавливаем значения зарплаты по умолчанию, если отсутствует salary
+            salary_from, salary_to = 0, 0
+        name = data.get("name", "")
+        url = data.get("url", "")
+        salary = {'from': salary_from, 'to': salary_to}
+        requirement = data.get("snippet", {}).get("requirement", "")
+
         return cls(name, url, salary, requirement)
 
     # Метод сравнения вакансий по зарплате

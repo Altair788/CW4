@@ -11,14 +11,18 @@ class API(ABC):
     """
 
     @abstractmethod
-    def __init__(self) -> None:
+    def __init__(self, settings_path: Path) -> None:
         """
-        Абстрактный метод для инициализации класса API.
+        Абстрактный Метод для инициализации класса API.
+
+        Args:
+           settings_path (Path): Путь к файлу с настройками соединения.
         """
+
         pass
 
     @abstractmethod
-    def get_vacancies(self, keyword: str):
+    def get_vacancies(self, keyword: str) -> list[dict]:
         """
         Абстрактный метод для получения вакансий по ключевому слову.
 
@@ -29,13 +33,13 @@ class API(ABC):
         pass
 
     @abstractmethod
-    def post_data(self, url_post: str):
+    def post_data(self, url_post: str) -> None:
         """
-       Абстрактный метод для отправки запроса.
+        Абстрактный метод для отправки запроса.
 
-       Args:
+        Args:
            url_post (str): URL запроса
-       """
+        """
         pass
 
 
@@ -49,7 +53,7 @@ class Parser(API):
     """
     settings_path: Path
 
-    def __init__(self, settings_path: Path):
+    def __init__(self, settings_path: Path) -> None:
         """
         Метод для инициализации класса API.
 

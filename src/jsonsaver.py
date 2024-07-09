@@ -12,23 +12,29 @@ class AbstractFileManager(ABC):
     """
 
     @abstractmethod
-    def save_to_file(self, *args: Any, **kwargs: Any) -> None:
+    def save_to_file(self, data: list[dict]) -> None:
         """
-        Метод добавления вакансий в файл
+        Сохраняет список вакансий в JSON-файл.
+
+        Args:
+            data (list[dict]): Список вакансий в формате словарей.
         """
         pass
 
     @abstractmethod
-    def get_vacancies_from_file(self, *args: Any, **kwargs: Any) -> list[dict]:
+    def get_vacancies_from_file(self) -> list[dict]:
         """
-        Метод получения данных из файла по критериям
-        """
+       Загружает вакансии из JSON-файла и возвращает список вакансий.
+
+       Returns:
+           list[Vacancy]: Список вакансий.
+       """
         pass
 
     @abstractmethod
     def delete_vacancies(self) -> None:
         """
-        Метод удаления информации о вакансиях.
+        Удаляет все вакансии из списка и сохраняет пустой список в файл.
         """
         pass
 

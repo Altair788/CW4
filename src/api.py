@@ -47,6 +47,7 @@ class Parser(API):
     Подключается к серверу, используя данные из файла settings.
     Находит вакансии по ключевому слову.
     """
+    settings_path: Path
 
     def __init__(self, settings_path: Path):
         """
@@ -55,14 +56,38 @@ class Parser(API):
         Args:
             settings_path (Path): Путь к файлу с настройками соединения.
         """
-        self.settings_path = settings_path
+        self.__settings_path = settings_path
 
-        with open(self.settings_path, 'r', encoding="UTF8") as file:
+        with open(self.__settings_path, 'r', encoding="UTF8") as file:
             settings: dict = json.load(file)
-            self.url: str = settings.get('url', 'https://api.hh.ru/vacancies')
-            self.headers: dict = settings.get('headers', {'User-Agent': 'HH-User-Agent'})
-            self.params: dict = settings.get('params', {'text': "", 'page': 0, 'per_page': 100})
-            self.vacancies: list = settings.get('vacancies', [])
+            self.__url: str = settings.get('url', 'https://api.hh.ru/vacancies')
+            self.__headers: dict = settings.get('headers', {'User-Agent': 'HH-User-Agent'})
+            self.__params: dict = settings.get('params', {'text': "", 'page': 0, 'per_page': 100})
+            self.__vacancies: list = settings.get('vacancies', [])
+
+    @property
+    def settings_path(self):
+        return self.__settings_path
+
+    @property
+    def url(self):
+        return self.__url
+
+    @property
+    def headers(self):
+        return self.__headers
+
+    @property
+    def params(self):
+        return self.__params
+
+    @property
+    def vacancies(self):
+        return self.__vacancies
+
+    @vacancies.setter
+    def vacancies(self, new_data: list):
+        self.__vacancies = new_data
 
     def get_vacancies(self, keyword: str) -> list[dict]:
         """
@@ -73,8 +98,8 @@ class Parser(API):
             list[dict]: Список с вакансиями
         """
         try:
-            self.params['text'] = keyword
-            response = requests.get(self.url, params=self.params)
+            self.__params['text'] = keyword
+            response = requests.get(self.__url, params=self.__params)
             response.raise_for_status()  # Проверяем статус ответа, вызывает исключение для ошибок HTTP
             vacancies = response.json()['items']
             return vacancies

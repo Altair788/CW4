@@ -9,16 +9,14 @@ class BaseVacancy(ABC):
 
     @classmethod
     @abstractmethod
-    def new_vacancy(cls, *args: Any, **kwargs: Any) -> 'Vacancy':
+    def new_vacancy(cls, data: dict) -> 'Vacancy':
         """
-        Метод для создания нового объекта вакансии.
+        Метод для создания нового объекта класса Вакансия.
 
         Args:
-            *args: Произвольные позиционные аргументы для создания вакансии.
-            **kwargs: Произвольные именованные аргументы для создания вакансии.
-
+            data(dict): данные по вакансии.
         Returns:
-            BaseVacancy: Новый объект вакансии.
+            Vacancy: экземпляр класса Вакансия.
         """
         pass
 
@@ -84,11 +82,13 @@ class Vacancy(BaseVacancy):
                 f"Требования к вакансии: {self.requirement}")
 
     @classmethod
-    def new_vacancy(cls, data: dict):
+    def new_vacancy(cls, data: dict) -> 'Vacancy':
         """
         Метод для создания экземпляра класса Вакансия.
         Args:
             data(dict): данные по вакансии.
+        Returns:
+            Vacancy: экземпляр класса Вакансия.
         """
         salary = data.get("salary")
         if salary:

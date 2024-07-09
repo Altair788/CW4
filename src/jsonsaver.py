@@ -43,14 +43,23 @@ class JSONSaver(AbstractFileManager, GetAverageSalaryMixin):
     """
     Класс для работы с содержимым файла: сохранения и загрузки вакансий в/из JSON-файла.
     """
+
     def __init__(self, file_path: str) -> None:
         """
         Конструктор объекта JSONSaver
         Args:
         file_path (str): Путь к файлу для сохранения/загрузки вакансий.
         """
-        self.vacancies: list[Vacancy] = []
-        self.file_path = file_path
+        self.__vacancies: list[Vacancy] = []
+        self.__file_path = file_path
+
+    @property
+    def vacancies(self) -> list[Vacancy]:
+        return self.__vacancies
+
+    @vacancies.setter
+    def vacancies(self, new_vacancies: list[Vacancy]):
+        self.__vacancies = new_vacancies
 
     def save_to_file(self, data: list[dict]) -> None:
         """
@@ -59,15 +68,15 @@ class JSONSaver(AbstractFileManager, GetAverageSalaryMixin):
         Args:
             data (list[dict]): Список вакансий в формате словарей.
         """
-        with open(self.file_path, "w", encoding="UTF-8") as file:
+        with open(self.__file_path, "w", encoding="UTF-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
 
     def delete_vacancies(self) -> None:
         """
         Удаляет все вакансии из списка и сохраняет пустой список в файл.
         """
-        self.vacancies = []
-        self.save_to_file(self.vacancies)
+        self.__vacancies = []
+        self.save_to_file(self.__vacancies)
 
     def get_vacancies_from_file(self) -> list[Vacancy]:
         """
@@ -76,7 +85,7 @@ class JSONSaver(AbstractFileManager, GetAverageSalaryMixin):
         Returns:
             list[Vacancy]: Список вакансий.
         """
-        with open(self.file_path, "r", encoding="UTF-8") as file:
+        with open(self.__file_path, "r", encoding="UTF-8") as file:
             vacancies_data = json.load(file)
         vacancies_list = Vacancy.cast_to_object_list(vacancies_data)
 

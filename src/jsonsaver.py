@@ -45,7 +45,6 @@ class JSONSaver(AbstractFileManager, GetAverageSalaryMixin):
         """
         self.vacancies: list[Vacancy] = []
         self.file_path = file_path
-        super().__init__()
 
     def save_to_file(self, data: list[dict]) -> None:
         """

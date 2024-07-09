@@ -23,20 +23,7 @@ class BaseVacancy(ABC):
         pass
 
 
-class PrintMixin:
-    """
-    Класс-миксин для печати информации о созданном объекте
-    """
-
-    def __init__(self):
-        # print(repr(self))
-        pass
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}('{self.name}', '{self.url}', {self.salary}, {self.requirement})"
-
-
-class Vacancy(BaseVacancy, PrintMixin):
+class Vacancy(BaseVacancy):
     """
     Представляет класс Вакансия.
     """

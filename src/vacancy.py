@@ -9,7 +9,7 @@ class BaseVacancy(ABC):
 
     @classmethod
     @abstractmethod
-    def new_vacancy(cls, *args: Any, **kwargs: Any) -> 'BaseVacancy':
+    def new_vacancy(cls, *args: Any, **kwargs: Any) -> 'Vacancy':
         """
         Метод для создания нового объекта вакансии.
 
@@ -97,8 +97,24 @@ class Vacancy(BaseVacancy, PrintMixin):
                 f"Требования к вакансии: {self.requirement}")
 
     @classmethod
-    def new_vacancy(cls, vacancy: dict):
-        name, url, salary, requirement = vacancy.values()
+    def new_vacancy(cls, data: dict):
+        """
+        Метод для создания экземпляра класса Вакансия.
+        Args:
+            data(dict): данные по вакансии.
+        """
+        salary = data.get("salary")
+        if salary:
+            salary_from = salary.get('from', 0) if salary.get('from') is not None else 0
+            salary_to = salary.get('to', 0) if salary.get('to') is not None else 0
+        else:
+            # Устанавливаем значения зарплаты по умолчанию, если отсутствует salary
+            salary_from, salary_to = 0, 0
+        name = data.get("name", "")
+        url = data.get("url", "")
+        salary = {'from': salary_from, 'to': salary_to}
+        requirement = data.get("snippet", {}).get("requirement", "")
+
         return cls(name, url, salary, requirement)
 
     # Метод сравнения вакансий по зарплате
@@ -128,22 +144,11 @@ class Vacancy(BaseVacancy, PrintMixin):
     def cast_to_object_list(cls, data: list[dict]) -> list['Vacancy']:
         """
         Возвращает список экземпляров класса Vacancy.
+        Args:
+            data(list(dict)): данные, полученные по API.
         """
         vacancies_list = []
         for item in data:
-            salary = item.get("salary")
-            if salary:
-                salary_from = salary.get('from', 0) if salary.get('from') is not None else 0
-                salary_to = salary.get('to', 0) if salary.get('to') is not None else 0
-            else:
-                # Устанавливаем значения зарплаты по умолчанию, если отсутствует salary
-                salary_from, salary_to = 0, 0
-
-            vacancy = cls(
-                name=item.get("name", ""),
-                url=item.get("url", ""),
-                salary={'from': salary_from, 'to': salary_to},
-                requirement=item.get("snippet", {}).get("requirement", ""),
-            )
+            vacancy = cls.new_vacancy(item)
             vacancies_list.append(vacancy)
         return vacancies_list
